@@ -1,7 +1,6 @@
 # !/usr/bin/env bash
 
 echo "Before you can do this, you must partition EFI, boot, and main encrypted volume"
-echo " "
 
 read -p "Please Enter EFI partition (e.g. /dev/sda1 or /dev/nvme0n1p1): " EFI
 
@@ -9,10 +8,10 @@ read -p "Please Enter boot partition (e.g. /dev/sda2 or /dev/nvme0n1p2): " BOOT
 
 read -p "Please Enter encrypted partition (e.g. /dev/sda3/ or /dev/nvme0n1p3): " VOLUME
 
-# Encryption time, first format the partition
-read -p "Please Enter password to encrypted partition: " ENCRYPT
-echo "$ENCRYPT" | cryptsetup luksFormat "$VOLUME"
-echo "$ENCRYPT" | cryptsetup luksOpen "$VOLUME" blackbox
+echo "Encryption time, first format the partition"
+read -p -s "Please Enter password to encrypted partition: " ENCRYPT
+echo "$ENCRYPT" | cryptsetup luksFormat "$VOLUME" -d -
+echo "$ENCRYPT" | cryptsetup luksOpen "$VOLUME" blackbox -d -
 BTRFS="dev/mapper/blackbox"
 
 # Convert volume to a Physical Volume, and then create a volume group
@@ -67,7 +66,7 @@ echo "Skipping..."
 fi
 
 # CPU and GPU Drivers
-echo "This is build for no GPU, or 1 GPU. Skip this and install manually afterwards if you have two, any form. Integrated/Laptop included."
+echo "This is built for no GPU, or 1 GPU. Skip this and install manually afterwards if you have two, any form. Integrated/Laptop included."
 read -p "nvidia or amd gpu? hit enter to skip (nvidia/amd/[enter])" GPU
 read -p "intel or amd processor? (intel/amd)" CPU
 
