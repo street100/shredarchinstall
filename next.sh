@@ -20,12 +20,12 @@ read -p -s "Password for account: " PASSWORD
 groupadd omnip
 sudo groupadd omnip
 useradd -m -G omnip /bin/zsh/ $USER
-echo "$PASSWORD" | passwd $USER
+echo "$PASSWORD" | passwd $USER -d -
 echo "%omnip ALL=(ALL) ALL" >> /etc/sudoers
 
 # Install packages that need setup
 # First, Rustup
-pacman -S rustup
+pacman -S rustup --noconfirm
 rustup default stable
 # Second, paru
 git clone https://aur.archlinux.org/paru.git
@@ -45,15 +45,15 @@ pacman-key --lsign A3F78B994C2171D5
 
 
 # Now, everything is set for final set of package installations, and boot prep
-paru -S steam
-paru -S github-desktop
+paru -S steam --noconfirm
+paru -S github-desktop --noconfirm
 
-paru -S binder_linux-dkms
-pacman -S lzip waydroid libvirt
+paru -S binder_linux-dkms --noconfirm
+pacman -S lzip waydroid libvirt --noconfirm
 
-pacman -S goofcord-bin
-pacman -S moonlight-qt
-pacman -S neovim
+pacman -S goofcord-bin --noconfirm
+pacman -S moonlight-qt --noconfirm
+pacman -S neovim --noconfirm
 
 # Enable necessary services
 systemctl enable NetworkManager
