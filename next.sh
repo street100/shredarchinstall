@@ -61,7 +61,7 @@ systemctl enable bluetooth
 systemctl enable sddm
 
 # Hooks
-sed "s/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck)/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 block filesystems fsck)" /etc/mkinitcpio.conf
+sed -i "s/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck)/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 block filesystems fsck)/" /etc/mkinitcpio.conf
 # Rebuild initramfs
 mkinitcpio -P
 
@@ -69,7 +69,8 @@ mkinitcpio -P
 read -p "Nvidia? (y/n) " NVIDIA
 if $NVIDIA=y
 echo "setting modules..."
-sed "s/MODULES=(/& nvidia nvidia_modeset nvidia_uvm nvidia_drm" /etc/mkinitcpio.conf
+sed -i "s/MODULES=()/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/" /etc/mkinitcpio.conf
+mkinitcpio -P
 elif $NVIDIA=n
 echo "Skipping..."
 fi
@@ -80,4 +81,18 @@ echo "Setting up boot..."
 grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=SHREDDED
 echo 'GRUB_CMDLINE_LINUX="cryptdevice=/dev/nvme0n1p3:blackbox root=/dev/cardboardbox/root"' >> /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
+
 echo "Done."
+echo "Run scripts installed in ~/Documents/Scripts to complete setup."
+echo "Do so in root, by first (in terminal) running:" 
+echo "sudo su"
+echo "and then:"
+echo "sh (nameofscript).sh"
+read -p -s "Press enter to continue"
+echo "Beyond that, run the following after to exit chroot"
+echo "exit"
+echo "Make certain this command actually exits you from chroot, if not type exit again"
+echo "umount -R /mnt"
+echo "swapoff -a"
+echo "After, you are clear to type reboot!"
+read -p -s "Press enter to continue"
