@@ -46,12 +46,20 @@ pacman-key --lsign A3F78B994C2171D5
 
 # Now, everything is set for final set of package installations, and boot prep
 paru -S steam --noconfirm
+paru -S librewolf --noconfirm
 paru -S github-desktop --noconfirm
 paru -S binder_linux-dkms --noconfirm
 
 # Waydroid
 pacman -S lzip waydroid libvirt --noconfirm
 waydroid init -s GAPPS
+systemctl enable waydroid
+systemctl start waydroid --now
+git clone https://github.com/casualsnek/waydroid_script /home/$USER
+cd /home/$USER/waydroid_script
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+cd
 
 # Misc
 pacman -S goofcord-bin --noconfirm
@@ -62,7 +70,7 @@ pacman -S neovim --noconfirm
 systemctl enable NetworkManager
 systemctl enable bluetooth
 systemctl enable sddm
-systemctl enable waydroid
+
 
 # Hooks
 sed -i "s/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck)/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 block filesystems fsck)/" /etc/mkinitcpio.conf
