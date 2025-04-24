@@ -47,10 +47,13 @@ pacman-key --lsign A3F78B994C2171D5
 # Now, everything is set for final set of package installations, and boot prep
 paru -S steam --noconfirm
 paru -S github-desktop --noconfirm
-
 paru -S binder_linux-dkms --noconfirm
-pacman -S lzip waydroid libvirt --noconfirm
 
+# Waydroid
+pacman -S lzip waydroid libvirt --noconfirm
+waydroid init -s GAPPS
+
+# Misc
 pacman -S goofcord-bin --noconfirm
 pacman -S moonlight-qt --noconfirm
 pacman -S neovim --noconfirm
@@ -59,6 +62,7 @@ pacman -S neovim --noconfirm
 systemctl enable NetworkManager
 systemctl enable bluetooth
 systemctl enable sddm
+systemctl enable waydroid
 
 # Hooks
 sed -i "s/HOOKS=(base udev autodetect microcode modconf kms keyboard keymap consolefont block filesystems fsck)/HOOKS=(base systemd autodetect microcode modconf kms keyboard sd-vconsole sd-encrypt lvm2 block filesystems fsck)/" /etc/mkinitcpio.conf
@@ -82,8 +86,11 @@ grub-install --target=x86_64-efi --efi-directory=/efi --bootloader-id=SHREDDED
 echo 'GRUB_CMDLINE_LINUX="cryptdevice=/dev/nvme0n1p3:blackbox root=/dev/cardboardbox/root"' >> /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
+# Gnabbing shredplasma files
+git clone https://github.com/street100/shredplasma /home/$USER
+
 echo "Done."
-echo "Run scripts installed in ~/Documents/Scripts to complete setup."
+echo "Run scripts installed in ~/ to complete setup."
 echo "Do so in root, by first (in terminal) running:" 
 echo "sudo su"
 echo "and then:"
